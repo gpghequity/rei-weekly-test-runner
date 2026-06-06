@@ -1,5 +1,9 @@
 const https = require('https');
 const http = require('http');
+const express = require('express');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 const LIBRARY_URL = process.env.LIBRARY_URL || 'https://sublime-friendship-production.up.railway.app';
 const PASSWORD = process.env.LIBRARY_PASSWORD || 'Savannah050810!';
@@ -235,11 +239,36 @@ async function runWeeklyTests() {
   }
 }
 
-if (process.env.RUN_TESTS === 'true') {
-  runWeeklyTests();
-} else {
-  console.log('Weekly test runner ready. Set RUN_TESTS=true to start.');
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    service: 'rei-weekly-test-runner',
+    status: 'ready',
+    endpoints: {
+      POST: '/api/run-tests (trigger test run)',
+      GET: '/api/status (check status)'
+    }
+  });
+});
+
+app.post('/api/run-tests', (req, res) => {
+  res.status(202).json({ message: 'Test run started', status: 'queued' });
+  runWeeklyTests().catch(err => console.error('Background test run failed:', err));
+});
+
+app.get('/api/status', (req, res) => {
+  res.status(200).json({ service: 'rei-weekly-test-runner', status: 'ready' });
+});
+
+app.listen(PORT, () => {
+  console.log(`[${new Date().toISOString()}] Weekly test runner listening on port ${PORT}`);
   console.log(`Library URL: ${LIBRARY_URL}`);
-}
+
+  if (process.env.RUN_TESTS === 'true') {
+    console.log('RUN_TESTS=true, starting tests immediately...');
+    runWeeklyTests();
+  }
+});
 
 module.exports = { runWeeklyTests };
