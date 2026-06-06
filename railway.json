@@ -1,0 +1,10 @@
+{
+  "name": "rei-weekly-test-runner",
+  "buildCommand": "npm install",
+  "startCommand": "node index.js",
+  "envs": {
+    "LIBRARY_URL": "https://sublime-friendship-production.up.railway.app",
+    "LIBRARY_PASSWORD": "Savannah050810!",
+    "RUN_TESTS": "true"
+  }
+}
