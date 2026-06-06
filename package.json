@@ -1,0 +1,11 @@
+{
+  "name": "rei-weekly-test-runner",
+  "version": "1.0.0",
+  "description": "Weekly test runner for all REI platform services",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --version"
+  },
+  "dependencies": {}
+}
